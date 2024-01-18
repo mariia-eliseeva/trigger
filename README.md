@@ -2,7 +2,11 @@
 
 ## Overview
 
-The Trigger Phrase Bot is a Telegram bot designed to identify and highlight 'trigger words' in conversations that might lead to negative reactions or manipulate the discussion. Utilizing OpenAI's GPT for natural language processing, this bot is skilled at detecting words that can subtly influence the emotional context of dialogues, often without adding meaningful content. These words can be particularly damaging in both professional and personal interactions. The bot’s goal is to promote positive and constructive communication. Offering support in English and Russian, it helps ensure that online conversations remain informative and respectful, free from emotionally charged or manipulative language.
+## Overview
+
+The Trigger Phrase Bot is a Telegram bot designed to identify and highlight 'trigger words' in conversations that might lead to negative reactions or manipulate the discussion. Currently operational on a local setup, the bot is planned to be deployed on servers for wider accessibility. Utilizing OpenAI's GPT for natural language processing, this bot is skilled at detecting words that can subtly influence the emotional context of dialogues, often without adding meaningful content. These words can be particularly damaging in both professional and personal interactions. The bot’s goal is to promote positive and constructive communication. Offering support in English and Russian, it helps ensure that online conversations remain informative and respectful, free from emotionally charged or manipulative language.
+
+Check out the Trigger Phrase Bot on Telegram: [Trigger Phrase Bot](https://t.me/trigger_phrase_bot)
 
 
 
@@ -39,7 +43,9 @@ The Trigger Phrase Bot is a Telegram bot designed to identify and highlight 'tri
 ## Future Scope
 
 - **Custom Large Language Model**: To further refine detection capabilities.
+- **Server Deployment**: While currently running on a local setup, plans are in place to deploy the bot on servers for enhanced availability and performance.
 - **Language Expansion**: To include more languages and broaden the user base.
+
 
 ## Requirements
 
