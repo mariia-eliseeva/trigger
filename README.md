@@ -2,21 +2,32 @@
 
 ## Overview
 
-The Trigger Phrase Bot is a Telegram bot designed to identify trigger words within phrases that could potentially cause negative reactions. Utilizing advanced natural language processing powered by OpenAI's GPT, this bot offers support in both English and Russian languages to encourage positive and respectful online communication.
+The Trigger Phrase Bot is a Telegram bot designed to identify and highlight 'trigger words' in conversations that might lead to negative reactions or manipulate the discussion. Utilizing OpenAI's GPT for natural language processing, this bot is skilled at detecting words that can subtly influence the emotional context of dialogues, often without adding meaningful content. These words can be particularly damaging in both professional and personal interactions. The bot’s goal is to promote positive and constructive communication. Offering support in English and Russian, it helps ensure that online conversations remain informative and respectful, free from emotionally charged or manipulative language.
+
+
 
 ## Screenshots
 
-### Bot Introduction
-![Bot Introduction](1.jpeg)
+<details>
+  <summary>Bot Introduction</summary>
+  <img src="src/main/images/1.jpeg" alt="Bot Introduction" width="300"/>
+</details>
 
-### Language Selection
-![Language Selection](2.jpeg)
+<details>
+  <summary>Language Selection</summary>
+  <img src="src/main/images/2.jpeg" alt="Bot Introduction" width="300"/>
+</details>
 
-### Bot Interaction
-![Bot Interaction](3.jpeg)
+<details>
+  <summary>Bot Interaction</summary>
+  <img src="src/main/images/3.jpeg" alt="Bot Introduction" width="300"/>
+</details>
 
-### Analysis Result
-![Analysis Result](4.jpeg)
+<details>
+  <summary>Analysis Result</summary>
+  <img src="src/main/images/4.jpeg" alt="Bot Introduction" width="300"/>
+</details>
+
 
 ## Features
 
