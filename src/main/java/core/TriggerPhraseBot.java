@@ -1,6 +1,10 @@
 
 package core;
 
+
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageReplyMarkup;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
+import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -37,6 +41,8 @@ public class TriggerPhraseBot extends TelegramLongPollingBot {
     private Map<Long, String> awaitingPhraseInput = new HashMap<>();
     private Map<Long, Boolean> awaitingPhraseText = new HashMap<>();
     private Map<Long, String> userLanguages = new HashMap<>();
+    private Map<Long, Integer> messageWithKeyboardIds = new HashMap<>();
+
 
     @Override
     public void onUpdateReceived(Update update) {
@@ -76,19 +82,21 @@ public class TriggerPhraseBot extends TelegramLongPollingBot {
         buttonEn.setCallbackData("EN");
 
         List<InlineKeyboardButton> rowInline = new ArrayList<>();
-        rowInline.add(buttonRu);
         rowInline.add(buttonEn);
+        rowInline.add(buttonRu);
+
 
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
         keyboard.add(rowInline);
 
         markupInline.setKeyboard(keyboard);
 
-        SendMessage message = new SendMessage(String.valueOf(chatId), "Выберите язык / Choose your language:");
+        SendMessage message = new SendMessage(String.valueOf(chatId), "Choose your language | Выберите язык");
         message.setReplyMarkup(markupInline);
 
         try {
-            execute(message);
+            Message sentMessage = execute(message);
+            messageWithKeyboardIds.put(chatId, sentMessage.getMessageId());
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
@@ -96,15 +104,33 @@ public class TriggerPhraseBot extends TelegramLongPollingBot {
 
 
     private void handleLanguageSelection(long chatId, String callData) {
-        String language = callData.equals("RU") ? "Русский" : "English";
+        String language = callData.equals("EN") ? "English" : "Русский";
         userLanguages.put(chatId, callData);
         awaitingPhraseText.put(chatId, true);
 
-        String textRu = "Привет! Я бот для поиска тригерных слов в токсичных фразах. Отправь мне фразу, и я укажу слово, которое могло вызвать твою негативную реакцию.";
-        String textEn = "Hello! I am a bot designed to identify trigger words in toxic phrases. Send me a phrase, and I will point out the word that could have caused your negative reaction.";
+        String textEn = "Send me a phrase, and I will find the trigger word.";
+        String textRu = "Отправь мне фразу, и я укажу слово, которое могло вызвать твою негативную реакцию.";
 
-        sendMessage(chatId, textRu, textEn);
+        String responseText = callData.equals("EN") ? textEn : textRu;
+
+        Integer messageId = messageWithKeyboardIds.get(chatId);
+        if (messageId != null) {
+            EditMessageText newMessageText = new EditMessageText();
+            newMessageText.setChatId(String.valueOf(chatId));
+            newMessageText.setMessageId(messageId);
+            newMessageText.setText(responseText);
+            newMessageText.setReplyMarkup(null);
+
+            try {
+                execute(newMessageText);
+            } catch (TelegramApiException e) {
+                e.printStackTrace();
+            }
+        }
     }
+
+
+
 
     private void sendMessage(long chatId, String textRu, String textEn) {
         String language = userLanguages.getOrDefault(chatId, "EN");

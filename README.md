@@ -1,47 +1,62 @@
-**Trigger Phrase Bot**
+# Trigger Phrase Bot
 
+## Overview
 
-**Overview**
+The Trigger Phrase Bot is a Telegram bot designed to identify trigger words within phrases that could potentially cause negative reactions. Utilizing advanced natural language processing powered by OpenAI's GPT, this bot offers support in both English and Russian languages to encourage positive and respectful online communication.
 
-The Trigger Phrase Bot is a Telegram bot specialized in identifying trigger words within potentially toxic phrases. Currently functioning in English and Russian, it leverages OpenAI's GPT for zero-shot learning to intelligently parse and analyze text, pinpointing words that could trigger negative reactions. This tool is vital for enhancing positive and respectful communication.
+## Screenshots
 
-**Future Scope**
+### Bot Introduction
+![Bot Introduction](1.jpeg)
 
-Plans are underway to develop a custom Large Language Model (LLM) for more refined detection capabilities and to expand language support.
+### Language Selection
+![Language Selection](2.jpeg)
 
+### Bot Interaction
+![Bot Interaction](3.jpeg)
 
+### Analysis Result
+![Analysis Result](4.jpeg)
 
-**Features**
+## Features
 
-* Phrase Analysis: Detects trigger words in user-provided text, focusing on nuances in the English and Russian languages.
-* AI-Powered: Employs ChatGPT for sophisticated natural language processing.
-* User-Friendly: Offers easy interaction with a straightforward start-up message.
+- **Phrase Analysis**: The bot examines phrases provided by users, highlighting any trigger words.
+- **AI-Powered**: Utilizes OpenAI's ChatGPT for intelligent text analysis.
+- **Multi-language Support**: Offers services in both English and Russian.
+- **User-Friendly**: Easy to use with clear instructions and a straightforward startup process.
 
-**Requirements**
-* Java JDK 11 or higher.
-* Maven
-* Telegram Bot API key.
-* OpenAI API key.
+## Future Scope
 
-**Installation**
+- **Custom Large Language Model**: To further refine detection capabilities.
+- **Language Expansion**: To include more languages and broaden the user base.
 
-1. Clone the repository: git clone [repository link]
-2. Navigate to the project directory: cd [project name]
-3. Install dependencies: mvn install
+## Requirements
 
+- Java JDK 11 or higher
+- Maven
+- Telegram Bot API key
+- OpenAI API key
 
-**Configuration**
-* Create a .env file in the root directory of the project.
-* Add the following variables with your API keys to the file:
-```bash
+## Installation
 
-bot.token=YOUR_TELEGRAM_BOT_TOKEN
-bot.username=YOUR_TELEGRAM_BOT_USERNAME
-database.url=YOUR_DATABASE_URL
-gpt.api.key=YOUR_OPENAI_API_KEY
-
+```shell
+git clone [repository link]
+cd [project name]
+mvn install
 ```
 
-**Usage**
-* To start, push the button /start to the bot in Telegram.
-* Follow the bot's instructions to record and analyze phrases.
+## Configuration
+Create a .txt file application.properties in the root directory of the project and add the following variables with your respective API keys:
+```bash
+bot.token=your_telegram_bot_token
+bot.username=your_telegram_bot_username
+database.url=your_database_url
+gpt.api.key=your_openai_api_key
+```
+
+## Usage
+- Send the /start command to the bot in Telegram.
+- Follow the instructions provided by the bot to input and analyze phrases.
+
+## Contributing
+Contributions are welcome! Please fork the repository and submit a pull request with your features or fixes.
