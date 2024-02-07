@@ -6,22 +6,24 @@ import com.theokanning.openai.service.OpenAiService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import config.GptProcessorWorker;
+import worker.GptProcessorWorker;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.util.List;
 
+
+@Service
 public class GptService {
     private final OpenAiService openAiService;
     private static final Logger logger = LoggerFactory.getLogger(GptProcessorWorker.class);
 
-
-    public GptService(String apiKey) {
+    public GptService(@Value("${gpt.apiKey}") String apiKey) {
         this.openAiService = new OpenAiService(apiKey, Duration.ofSeconds(60));
     }
 
-
-    public GptResponse getGptResponse(String phraseText) {
+    public GptResponse getGPTResponseForTriggerWord(String phraseText) {
 
             try {
                 String prompt = "Проанализируйте следующие фразы на наличие триггерных слов. Для каждой фразы определите, какое конкретно слово является триггерным. Пожалуйста, обратите внимание: если я задаю вопрос на русском языке, ожидаю вашего ответа также на русском. Если же вопрос будет задан на английском, ответите мне, пожалуйста, на английском. Вот примеры фраз: Объясняю: Ниже я пишу токсичную фразу, триггерное (манипулятивное) слово, и объясняю почему это слово триггерное, и дальше ответ пользователя на эту фразу. Если во фразе есть глагол и перед ним частица 'не', то нельзя разделять частицу и глагол. Если фраза на английском, то и отвечать надо на английском " +
@@ -41,8 +43,8 @@ public class GptService {
                 ChatCompletionRequest chatCompletionRequest = ChatCompletionRequest
 
                         .builder()
-//                    .model("gpt-3.5-turbo")
-                        .model("gpt-4")
+                    .model("gpt-3.5-turbo")
+//                        .model("gpt-4")
 
                         .messages(
                                 List.of(

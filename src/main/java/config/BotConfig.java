@@ -1,5 +1,7 @@
 package config;
 
+import core.Database;
+import gpt.GptService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -8,12 +10,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
-import core.Database;
-import core.TriggerPhraseBot;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
+import persistence.TriggerPhraseRepository;
+import userresponse.MessageSender;
+import worker.GptProcessorWorker;
 
 @Configuration
 @EnableScheduling
@@ -31,6 +34,11 @@ public class BotConfig {
     private String dbUrl;
 
     @Bean
+    public Database database() {
+        return new Database(dbUrl);
+    }
+
+    @Bean
     public TelegramBotsApi botsApi(TelegramLongPollingBot telegramBot) throws TelegramApiException {
         logger.info("Initialized Telegram API");
         TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
@@ -39,8 +47,7 @@ public class BotConfig {
     }
 
     @Bean
-    public TelegramLongPollingBot telegramBot() {
-        Database database = new Database(dbUrl);
+    public TelegramLongPollingBot telegramBot(Database database) {
         TriggerPhraseBot bot = new TriggerPhraseBot(database);
         bot.setBotUsername(botUsername);
         bot.setBotToken(botToken);
@@ -48,9 +55,7 @@ public class BotConfig {
     }
 
     @Bean
-    public GptProcessorWorker gptProcessorWorker(@Value("${gpt.api.key}") String gptApiKey,
-                                                 @Value("${database.url}") String dbUrl,
-                                                 MessageSender messageSender) {
-        return new GptProcessorWorker(gptApiKey, dbUrl, messageSender);
+    public GptProcessorWorker gptProcessorWorker(Database database, GptService gptService, MessageSender messageSender, TriggerPhraseRepository triggerPhraseRepository) {
+        return new GptProcessorWorker(database, gptService, messageSender, triggerPhraseRepository);
     }
 }

@@ -11,7 +11,7 @@ public class Phrase {
         this.phraseId = phraseId;
         this.userId = userId;
         this.phraseText = phraseText;
-        this.status = status;
+        this.status = "waiting for GPT-processing";
         this.gptResponse = gptResponse;
     }
 

@@ -1,8 +1,8 @@
+package config;
 
-package core;
 
-
-import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageReplyMarkup;
+import core.Database;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
@@ -14,6 +14,8 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import persistence.TriggerPhraseRepository;
+import persistence.UserLanguageRepository;
 
 import java.time.LocalDateTime;
 
@@ -33,6 +35,12 @@ public class TriggerPhraseBot extends TelegramLongPollingBot {
     private String botToken;
 
     private Database databaseTriggerPhraseBot;
+
+    @Autowired
+    private TriggerPhraseRepository triggerPhraseRepository;
+
+    @Autowired
+    private UserLanguageRepository userLanguageRepository;
 
     public TriggerPhraseBot(Database database) {
         this.databaseTriggerPhraseBot = database;
@@ -59,15 +67,21 @@ public class TriggerPhraseBot extends TelegramLongPollingBot {
             return;
         }
 
+        // выбран ли язык
+        String selectedLanguage = userLanguageRepository.getUserLanguage(chatId);
+        if (selectedLanguage == null) {
+            // выбрать если нет
+            handleStartCommand(chatId);
+        }
+
         if (messageText != null) {
-            if (messageText.equals("/start")) {
-                handleStartCommand(chatId);
-            } else if (awaitingPhraseText.getOrDefault(chatId, false)) {
+            if (awaitingPhraseText.getOrDefault(chatId, false)) {
                 awaitingPhraseInput.put(chatId, messageText);
                 processPhrase(chatId, messageText);
             }
         }
     }
+
 
 
     private void handleStartCommand(long chatId) {
@@ -105,7 +119,7 @@ public class TriggerPhraseBot extends TelegramLongPollingBot {
 
     private void handleLanguageSelection(long chatId, String callData) {
         String language = callData.equals("EN") ? "English" : "Русский";
-        userLanguages.put(chatId, callData);
+        userLanguageRepository.setUserLanguage(chatId, callData);
         awaitingPhraseText.put(chatId, true);
 
         String textEn = "Send me a phrase, and I will find the trigger word.";
@@ -131,7 +145,6 @@ public class TriggerPhraseBot extends TelegramLongPollingBot {
 
 
 
-
     private void sendMessage(long chatId, String textRu, String textEn) {
         String language = userLanguages.getOrDefault(chatId, "EN");
         String text = language.equals("RU") ? textRu : textEn;
@@ -152,7 +165,7 @@ public class TriggerPhraseBot extends TelegramLongPollingBot {
             System.out.println("No phrase from Chat ID: " + chatId);
             return;
         }
-        long phraseID = databaseTriggerPhraseBot.savePhrase(chatId, messageText, LocalDateTime.now());
+        long phraseID = triggerPhraseRepository.savePhrase(chatId, messageText, LocalDateTime.now());
 
         String textRuProcessing = "Ваша фраза принята в обработку. Время ожидания меньше минуты.";
         String textEnProcessing = "Your phrase has been accepted for processing. Waiting time is less than a minute.";
